@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% load static %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static 'myposts/style.css' %}">
+    <title>Ajax Posts</title>
+</head>
+<body>
+    <div id='placeholder' style='margin-top:35px; border:1px solid silver; width:750px; padding:10px;'>
+    </div>
+    <h1> My Posts</h1>
+    <form action=/process method=post>
+        {% csrf_token %}
+        <label for=note>Add a Note</label>
+        <textarea name=desc></textarea>
+        <input type=submit name=submit value="Post It!">
+    </form>
+    <script>
+        $(document).ready(function(){
+        $('form').submit(function(e){
+            e.preventDefault()
+            $.ajax({
+            url: '/process',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(serverResponse){
+                console.log("Received this from server: ", serverResponse)
+                $('#placeholder').html(serverResponse)
+
+            }
+        })
+        })
+        })
+        
+    </script>
+    
+</body>
+</html>
